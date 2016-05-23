@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>chat.png</file>
+        <file>Icons/Icon.png</file>
+        <file>Icons/User.png</file>
     </qresource>
 </RCC>

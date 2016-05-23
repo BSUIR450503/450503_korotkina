@@ -10,20 +10,21 @@
 
 #define PORT 1234
 
-
 class Server : QObject {
     Q_OBJECT
 public:
     explicit Server(QObject* parent = 0);
     void sendUserList();
     void sendToAll(const QString&);
+
+private:
+    QTcpServer* server;
+    QMap<QTcpSocket*, QString> clients;
+
 public slots:
     void onNewConnection();
     void onDisconnect();
     void onReadyRead();
-private:
-    QTcpServer* server;
-    QMap<QTcpSocket*,QString> clients;
 };
 
 #endif // SERVER_H

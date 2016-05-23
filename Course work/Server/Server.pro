@@ -10,8 +10,9 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-SOURCES += main.cpp \
-    server.cpp
+SOURCES += \
+    Main.cpp \
+    Server.cpp
 
 HEADERS += \
-    server.h
+    Server.h

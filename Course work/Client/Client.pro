@@ -13,14 +13,15 @@ TARGET = Client
 TEMPLATE = app
 
 
-SOURCES += main.cpp \
-    mainwindow.cpp
+SOURCES += \
+    MainWindow.cpp \
+    Main.cpp
 
 HEADERS  += \
-    mainwindow.h
+    MainWindow.h
 
 FORMS    += \
-    mainwindow.ui
+    Mainwindow.ui
 
 RESOURCES += \
-    icons.qrc
+    Icons.qrc

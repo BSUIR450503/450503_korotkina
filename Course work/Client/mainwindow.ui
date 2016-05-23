@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>KekChat Client</string>
+   <string>Chat</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QFrame {
@@ -87,26 +87,16 @@ QLineEdit {
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="QLabel" name="upperLabel">
-         <property name="text">
-          <string>KekChat</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="chatPage">
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <layout class="QHBoxLayout" name="chatHBox">
              <item>
-              <widget class="QTextEdit" name="teChat">
+              <widget class="QTextEdit" name="chatField">
                <property name="minimumSize">
                 <size>
                  <width>300</width>
@@ -126,7 +116,7 @@ p, li { white-space: pre-wrap; }
               </widget>
              </item>
              <item>
-              <widget class="QListWidget" name="lwUsers">
+              <widget class="QListWidget" name="userList">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
                  <horstretch>0</horstretch>
@@ -171,21 +161,39 @@ p, li { white-space: pre-wrap; }
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout">
+            <layout class="QHBoxLayout" name="controlsHBox">
              <item>
-              <widget class="QLineEdit" name="leMessage">
+              <widget class="QLineEdit" name="messageLine">
                <property name="clearButtonEnabled">
                 <bool>true</bool>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pbSend">
+              <widget class="QPushButton" name="sendImageButton">
+               <property name="text">
+                <string>Add...</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="sendButton">
                <property name="text">
                 <string>Send</string>
                </property>
                <property name="default">
                 <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="infoHBox">
+             <item>
+              <widget class="QPushButton" name="aboutButton">
+               <property name="text">
+                <string>About</string>
                </property>
               </widget>
              </item>
@@ -211,7 +219,7 @@ p, li { white-space: pre-wrap; }
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
-               <widget class="QLabel" name="label_2">
+               <widget class="QLabel" name="signInLabel">
                 <property name="text">
                  <string>Sign in</string>
                 </property>
@@ -221,9 +229,9 @@ p, li { white-space: pre-wrap; }
                </widget>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <layout class="QHBoxLayout" name="signInHBox">
                 <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_5">
+                 <layout class="QVBoxLayout" name="labelVBox">
                   <item>
                    <widget class="QLabel" name="serverLabel">
                     <property name="text">
@@ -232,7 +240,7 @@ p, li { white-space: pre-wrap; }
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="label">
+                   <widget class="QLabel" name="nameLabel">
                     <property name="text">
                      <string>Name: </string>
                     </property>
@@ -241,9 +249,9 @@ p, li { white-space: pre-wrap; }
                  </layout>
                 </item>
                 <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_3">
+                 <layout class="QVBoxLayout" name="editLinesVBox">
                   <item>
-                   <widget class="QLineEdit" name="leServer">
+                   <widget class="QLineEdit" name="serverNameLine">
                     <property name="minimumSize">
                      <size>
                       <width>170</width>
@@ -259,7 +267,7 @@ p, li { white-space: pre-wrap; }
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="leName">
+                   <widget class="QLineEdit" name="userNameLine">
                     <property name="maxLength">
                      <number>12</number>
                     </property>
@@ -270,9 +278,9 @@ p, li { white-space: pre-wrap; }
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_4">
+               <layout class="QHBoxLayout" name="loginButtonHBox">
                 <item>
-                 <spacer name="horizontalSpacer">
+                 <spacer name="horizontalSpacerLeft">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -285,14 +293,14 @@ p, li { white-space: pre-wrap; }
                  </spacer>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pbLogin">
+                 <widget class="QPushButton" name="loginButton">
                   <property name="text">
                    <string>Login</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <spacer name="horizontalSpacer_2">
+                 <spacer name="horizontalSpacerRight">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -313,16 +321,6 @@ p, li { white-space: pre-wrap; }
          </widget>
         </widget>
        </item>
-       <item>
-        <widget class="QLabel" name="lowerLabel">
-         <property name="text">
-          <string>Created by JKCompany in 2016</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
     </item>
@@ -330,13 +328,12 @@ p, li { white-space: pre-wrap; }
   </widget>
  </widget>
  <tabstops>
-  <tabstop>leName</tabstop>
-  <tabstop>leServer</tabstop>
-  <tabstop>teChat</tabstop>
-  <tabstop>lwUsers</tabstop>
-  <tabstop>leMessage</tabstop>
-  <tabstop>pbLogin</tabstop>
-  <tabstop>pbSend</tabstop>
+  <tabstop>userNameLine</tabstop>
+  <tabstop>serverNameLine</tabstop>
+  <tabstop>chatField</tabstop>
+  <tabstop>userList</tabstop>
+  <tabstop>messageLine</tabstop>
+  <tabstop>loginButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

@@ -1,12 +1,13 @@
-#include "mainwindow.h"
+#include "MainWindow.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication application(argc, argv);
-    application.setWindowIcon(QIcon(":/chat.png"));
-    MainWindow window;
-    window.show();
+    application.setWindowIcon(QIcon(":/Icons/Icon.png"));
+
+    MainWindow mainWindow;
+    mainWindow.show();
 
     return application.exec();
 }

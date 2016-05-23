@@ -1,11 +1,13 @@
-#include "server.h"
+#include "Server.h"
 #include <QString>
 #include <QRegExp>
+#include <QDataStream>
+#include <QFile>
+#include <QFileInfo>
 
 Server::Server(QObject* parent) : QObject(parent) {
     server = new QTcpServer(this);
-    connect(server, SIGNAL(newConnection()),
-            this,   SLOT(onNewConnection()));
+    connect(server, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
 
     if (!server->listen(QHostAddress::Any, PORT)) {
         qDebug() << "Server is not started.";
@@ -46,24 +48,75 @@ void Server::onDisconnect() {
 }
 
 void Server::onReadyRead() {
-    QRegExp loginRex("^/login:(.*)$");
-    QRegExp messageRex("^/say:(.*)$");
+    QRegExp loginRegExp("^/login:(.*)$");
+    QRegExp messageRegExp("^/message:(.*)$");
+    QRegExp fileRegExp("^/file:(.*)$");
+
     QTcpSocket* socket = (QTcpSocket*)sender();
+
     while (socket->canReadLine()) {
         QString line = QString::fromUtf8(socket->readLine()).trimmed();
-        if (loginRex.indexIn(line) != -1) {
-            QString user = loginRex.cap(1);
+        if (loginRegExp.indexIn(line) != -1) {
+            QString user = loginRegExp.cap(1);
             clients[socket] = user;
             sendToAll(QString("/system:" + user + " has joined the chat.\n"));
             sendUserList();
             qDebug() << user << "logged in.";
         }
-        else if (messageRex.indexIn(line) != -1) {
+        else if (messageRegExp.indexIn(line) != -1) {
             QString user = clients.value(socket);
-            QString msg = messageRex.cap(1);
+            QString msg = messageRegExp.cap(1);
             sendToAll(QString(user + ":" + msg + "\n"));
             qDebug() << "User:" << user;
             qDebug() << "Message:" << msg;
+        }
+        else if (fileRegExp.indexIn(line) != -1){
+            QString user = clients.value(socket);
+
+            foreach (QTcpSocket* tempSocket, clients.keys()) {
+                if(tempSocket == socket)
+                    continue;
+                tempSocket->write(QString("/file:" + user + " sended file.\n").toUtf8());
+            }
+
+            qDebug() << user << "send file.";
+
+            socket->waitForReadyRead(-1);
+            QByteArray metadata;
+            metadata = socket->readAll();
+
+            QDataStream readMeta(&metadata, QIODevice::ReadOnly);
+            readMeta.setVersion(QDataStream::Qt_5_6);
+
+            foreach (QTcpSocket* tempSocket, clients.keys()) {
+                if(tempSocket == socket)
+                    continue;
+                tempSocket->write(metadata);
+                tempSocket->waitForBytesWritten();
+            }
+
+            quint64 fileSize;
+            readMeta >> fileSize;
+
+            long int bytesSended = 0;
+            long int bytesToSend = fileSize;
+
+            while (bytesSended < bytesToSend)
+            {
+                while(!socket->waitForReadyRead(-1));
+                QByteArray tmp = socket->readAll();
+
+                foreach (QTcpSocket* tempSocket, clients.keys()) {
+                    if(tempSocket == socket)
+                        continue;
+                    tempSocket->write(tmp);
+                    tempSocket->waitForBytesWritten();
+                }
+
+                bytesSended += tmp.size();
+            }
+            qDebug() << "File size: " << bytesSended;
+            qDebug() << "File sended";
         }
         else {
             qDebug() << "Bad message from " << socket->peerAddress().toString();
