@@ -9,8 +9,6 @@
 using namespace std;
 stack<HANDLE> threadIds;
 HANDLE hMutex;
-#define MAX_THREADS 20
-
 
 #endif
 #ifdef __linux__
@@ -31,31 +29,28 @@ HANDLE hMutex;
 using namespace std;
 #endif
 
-#ifdef _WIN32
-void GetMutex()
-{
-	WaitForSingleObject(hMutex, INFINITE);
-}
+static const char* strings[] = { "1.First\n\r", "2.Second\n\r", "3.Third\n\r",
+"4.Fourth\n\r", "5.Fifth\n\r", "6.Sixth\n\r", "7.Seventh\n\r", "8.Eighth\n\r",
+"9.Ninth\n\r", "10.Tenth\n\r" };
 
-void ReleaseMutexM()
-{
-	ReleaseMutex(hMutex);
-}
+
+#ifdef _WIN32
 
 DWORD WINAPI ActionFunc(LPVOID param)
 {
 	while (true)
 	{
-		GetMutex();
-		int counter = 1;
+		WaitForSingleObject(hMutex, INFINITE);
 		int number = threadIds.size();
-		for (int param = 0; param < number; param++)
+		for (int counter = 1; counter - 1 < number; counter++)
 		{
-			cout << counter << endl;
-			counter++;
-			Sleep(200);
-		}
-		ReleaseMutexM();
+			for (int i = 0; i < strlen(strings[counter - 1]); i++)
+			{
+				cout << strings[counter - 1][i];
+				Sleep(50);
+			}
+	}
+		ReleaseMutex(hMutex);
 	}
 }
 
@@ -63,7 +58,7 @@ void CreateThread()
 {
 	DWORD threadId;
 	int msg = 0;
-	auto newThread = CreateThread(NULL, 0, ActionFunc, (int*)msg, 0, &threadId);
+	HANDLE newThread = CreateThread(NULL, 0, ActionFunc, (int*)msg, 0, &threadId);
 	threadIds.push(newThread);
 }
 
@@ -74,7 +69,7 @@ void AbortLastThread()
 		cout << "There's no threads to terminate" << endl;
 		return;
 	}
-	auto lastId = threadIds.top();
+	HANDLE lastId = threadIds.top();
 	TerminateThread(lastId, NULL);
 	threadIds.pop();
 
@@ -131,34 +126,27 @@ void initMutex()
 	}
 }
 
-void getMutex()
-{
-	pthread_mutex_lock(&mutex);
-}
-
-void releaseMutex()
-{
-	pthread_mutex_unlock(&mutex);
-}
-
-
 void* outputMethod(void* args)
 {
 
 	for (;;) {
-		getMutex();
+		pthread_mutex_lock(&mutex);
 		if (terminateLast){
 			terminateLast = false;
-			releaseMutex();
+			pthread_mutex_unlock(&mutex);
 			pthread_exit(NULL);
 		}
 
-		for (int i = 1; i < threadIds.size(); i++)
+		int number = threadIds.size();
+		for (int counter = 1; counter - 1 < number; counter++)
 		{
-			printf("Thread %i is running\n\r ", i);
-			sleep(1);
+			for (int i = 0; i < strlen(strings[counter - 1]); i++)
+			{
+				cout << strings[counter - 1][i];
+				Sleep(1);
+			}
 		}
-		releaseMutex();
+		pthread_mutex_unlock(&mutex);
 	}
 	return NULL;
 }
