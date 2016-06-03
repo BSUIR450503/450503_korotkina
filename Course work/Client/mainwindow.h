@@ -4,6 +4,12 @@
 #include <QMainWindow>
 #include <QTcpSocket>
 #include <QRegExpValidator>
+#include <QRegExp>
+#include <QMessageBox>
+#include <QListWidgetItem>
+#include <QFile>
+#include <QFileDialog>
+#include <QThread>
 
 #define PORT 1234
 
@@ -22,10 +28,19 @@ private:
     Ui::MainWindow *ui;
     QTcpSocket* socket;
 
+    QFile* receivedFile;
+    QString fileName;
+    quint64 fileSize;
+    QDataStream* writeToFile;
+
+    bool fileReadingContinue;
+    long int bytesWrittenToFile;
+
 private slots:
     void loginButtonClicked();
     void sendMessageButtonClicked();
     void sendFileButtonClicked();
+    void roomButtonClicked();
     void aboutButtonClicked();
     void onReadyRead();
     void onConnected();

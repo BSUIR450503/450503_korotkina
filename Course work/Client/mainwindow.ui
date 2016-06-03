@@ -96,24 +96,45 @@ QLineEdit {
            <item>
             <layout class="QHBoxLayout" name="chatHBox">
              <item>
-              <widget class="QTextEdit" name="chatField">
-               <property name="minimumSize">
-                <size>
-                 <width>300</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="readOnly">
-                <bool>true</bool>
-               </property>
-               <property name="html">
-                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Helvetica,Arial,sans-serif'; font-size:12px; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-              </widget>
+              <layout class="QVBoxLayout" name="chatVBox">
+               <item>
+                <layout class="QHBoxLayout" name="roomHBox">
+                 <item>
+                  <widget class="QLineEdit" name="roomLine">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>0</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="roomButton">
+                   <property name="text">
+                    <string>Connect to another room</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QTextEdit" name="chatField">
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
               <widget class="QListWidget" name="userList">
@@ -164,15 +185,14 @@ p, li { white-space: pre-wrap; }
             <layout class="QHBoxLayout" name="controlsHBox">
              <item>
               <widget class="QLineEdit" name="messageLine">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="clearButtonEnabled">
                 <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="sendImageButton">
-               <property name="text">
-                <string>Add...</string>
                </property>
               </widget>
              </item>
@@ -183,6 +203,19 @@ p, li { white-space: pre-wrap; }
                </property>
                <property name="default">
                 <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="sendImageButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Send File</string>
                </property>
               </widget>
              </item>
@@ -328,12 +361,14 @@ p, li { white-space: pre-wrap; }
   </widget>
  </widget>
  <tabstops>
-  <tabstop>userNameLine</tabstop>
   <tabstop>serverNameLine</tabstop>
-  <tabstop>chatField</tabstop>
   <tabstop>userList</tabstop>
   <tabstop>messageLine</tabstop>
   <tabstop>loginButton</tabstop>
+  <tabstop>userNameLine</tabstop>
+  <tabstop>sendButton</tabstop>
+  <tabstop>sendImageButton</tabstop>
+  <tabstop>aboutButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>
