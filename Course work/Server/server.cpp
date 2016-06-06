@@ -46,19 +46,23 @@ Server::Server(QObject* parent) : QObject(parent)
 
 void Server::sendUserList(int room)
 {
+    /* Записываем список клиентов в строку с ключевым словом "users" через запятую */
     QString line = "/users:";
     foreach (QTcpSocket* socket, clients.keys()) {
         if(clients.value(socket)->getRoom() == room) {
             line.append(QString(clients.value(socket)->getUsername() + ','));
         }
     }
+    /* Удаляем последнюю запятую */
     line.chop(1);
     line.append("\n");
+    /* Посылаем полученную строку всем клиентам в комнате */
     sendToRoom(line, room);
 }
 
 void Server::sendToRoom(const QString& message, int room)
 {
+    /* Отправляем сообщение всем клиентам в комнате room */
     foreach (QTcpSocket* socket, clients.keys()) {
         if(clients.value(socket)->getRoom() == room) {
             socket->write(message.toUtf8());
@@ -66,8 +70,10 @@ void Server::sendToRoom(const QString& message, int room)
     }
 }
 
+/* Слот активируется при каждом новом подключении к серверу */
 void Server::onNewConnection()
 {
+    /* Получаем указатель на сокет последнего полученного клиента */
     QTcpSocket* socket = server->nextPendingConnection();
     User* user = new User("", 0);
 
@@ -76,6 +82,7 @@ void Server::onNewConnection()
     connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnect()));
 
+    /* Добавляем новое подключение в список клиентов сервера */
     clients.insert(socket, user);
 }
 
@@ -92,12 +99,15 @@ void Server::onDisconnect()
     sendUserList(room);
 }
 
+/* Слот активируется при наличии новых данных для чтения в сокетах */
 void Server::onReadyRead()
 {
+    /* Регулярные выражения для фильтрации сообщений по ключевым словам */
     QRegExp loginRegExp("^/login:(.*):(.*)$");
     QRegExp messageRegExp("^/message:(.*)$");
     QRegExp fileRegExp("^/file:(.*)$");
 
+    /* Определяем сокет, вызвавший слот */
     QTcpSocket* socket = (QTcpSocket*)sender();
 
     while (socket->canReadLine()) {

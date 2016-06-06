@@ -11,29 +11,38 @@
 #include <QFileDialog>
 #include <QThread>
 
+/* Номер порта соединения с сервером */
 #define PORT 1234
 
 namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
+class Client : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit Client(QWidget *parent = 0);
+    ~Client();
 
 private:
+    /* Указатель на форму главного окна */
     Ui::MainWindow *ui;
+    /* Указатель на сокет для соединения с сервером */
     QTcpSocket* socket;
 
+    /* Указатель на получаемый файл */
     QFile* receivedFile;
-    QString fileName;
+    /* Имя получаемого файла */
+    QString fileName;\
+    /* Размер получаемого файла */
     quint64 fileSize;
+    /* Поток записи в файл */
     QDataStream* writeToFile;
 
+    /* Флаг записи файл */
     bool fileReadingContinue;
+    /* Количество байт, уже записанных в файл */
     long int bytesWrittenToFile;
 
 private slots:
